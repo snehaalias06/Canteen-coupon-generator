@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='coupon_styles.css') }}">
+    <title>Coupon</title>
+</head>
+<body>
+    <div class="coupon-container">
+        <div class="coupon-header">
+            <h1>DUK MESS COUPON</h1>
+        </div>
+        <div class="coupon-body">
+            <p><strong>Name:</strong> {{ name }}</p>
+            <p><strong>Department:</strong> {{ department }}</p>
+            <p><strong>Meal:</strong> {{ meal }}</p>
+            <p><strong>Preference:</strong> {{ preference }}</p>
+        </div>
+        <div class="coupon-footer">
+            <p>Enjoy your meal!</p>
+        </div>
+    </div>
+</body>
+</html>

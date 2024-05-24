@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Hostel Mess Chatbot</title>
+</head>
+<body>
+    <div class="chat-container">
+        <div id="chatbox"></div>
+        <input type="text" id="userInput" placeholder="Type your message here..." autofocus>
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        let step = 0;
+        let userData = {};
+
+        function sendMessage() {
+            const input = document.getElementById('userInput').value;
+            if (input.trim() === '') return;
+
+            displayMessage(input, 'user');
+            document.getElementById('userInput').value = '';
+
+            switch(step) {
+                case 0:
+                    userData.name = input;
+                    displayMessage('Which department are you from?', 'bot');
+                    break;
+                case 1:
+                    userData.department = input;
+                    displayMessage('Which meal do you need? (1: Breakfast, 2: Lunch, 3: Dinner)', 'bot');
+                    break;
+                case 2:
+                    userData.meal = input === '1' ? 'Breakfast' : input === '2' ? 'Lunch' : 'Dinner';
+                    displayMessage('Do you need veg or non-veg?', 'bot');
+                    break;
+                case 3:
+                    userData.preference = input;
+                    submitData(userData);
+                    break;
+            }
+            step++;
+        }
+
+        function displayMessage(message, sender) {
+            const chatbox = document.getElementById('chatbox');
+            const messageElement = document.createElement('div');
+            messageElement.className = sender;
+            messageElement.textContent = message;
+            chatbox.appendChild(messageElement);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        function submitData(data) {
+            fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                window.location.href = `/coupon?name=${data.name}&department=${data.department}&meal=${data.meal}&preference=${data.preference}`;
+            });
+        }
+
+        window.onload = () => {
+            displayMessage('Hi! What is your name?', 'bot');
+        }
+    </script>
+</body>
+</html>
